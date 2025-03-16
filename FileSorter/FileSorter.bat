@@ -15,23 +15,25 @@ REM ========================================================
 REM НАСТРОЙКИ
 REM ========================================================
 
-set "LOG_FILE=FileSorter.log"           & REM Лог-файл
-set "ROOT_FOLDER=_SORTED"               & REM Основная (корневая) папка для отсортированного
-set "UNNAMED_PREFIX=UNNAMED"            & REM Префикс для безымянных файлов
-set "DESCRIPTION_FILE=descript.ion"     & REM Определение и имя файла описания
-set "CREATE_DESCRIPTION=1"              & REM Создавать descript.ion (0/1)
-set "UNCATEGORIZED_FOLDER=ETC"          & REM Папка для файлов не подпадающих в категории (если не задана - используется корневая)
-set "CREATE_UNCATEGORIZED_SUBFOLDERS=0" & REM Создать подпапки для файлов не подпадающих в категории (0/1)
-set "BAR_LENGTH=30"                     & REM Длина прогресс-бара в символах
-set "FILL_CHAR=#"                       & REM Символ заполнения на прогресс-баре
-set "EMPTY_CHAR=-"                      & REM Символ пустоты на прогресс-баре
-
-
 REM Определение категорий для сортировки по расширениям. Удаление либо расширение списка делается здесь.
 REM Образец: set "CATEGORIES=VAR где VAR определяет категорию и название подпапки для нее, категории разделяются пробелом.
 
-set "CATEGORIES=DOX IMG SND VID TOR ARX EXE HTM"                        & REM Категории для сортировки
-set "PERSONAL_SUBFOLDERS=EXE"                                           & REM Категории где создаются персональные подпапки
+set "CATEGORIES=ARX DOX EXE FNT HTM IMG ISO LIB SND TOR VID"      & REM Категории для сортировки
+set "PERSONAL_SUBFOLDERS="                                        & REM Категории в которых будут создаваться персональные подпапки
+
+set "UNCATEGORIZED_FOLDER=ETC"                                    & REM Папка для файлов не подпадающих в категории (если не задана - используется корневая)
+set "CREATE_UNCATEGORIZED_SUBFOLDERS=0"                           & REM Создать подпапки для файлов не подпадающих в категории (0/1)
+
+set "LOG_FILE=FileSorter.log"                                     & REM Лог-файл
+set "ROOT_FOLDER=_SORTED"                                         & REM Основная (корневая) папка для отсортированного
+set "UNNAMED_PREFIX=UNNAMED"                                      & REM Префикс для безымянных файлов
+
+set "CREATE_DESCRIPTION=0"                                        & REM Создавать descript.ion (0/1)
+set "DESCRIPTION_FILE=descript.ion"                               & REM Определение и имя файла описания
+
+set "BAR_LENGTH=30"                                               & REM Длина прогресс-бара в символах
+set "FILL_CHAR=#"                                                 & REM Символ заполнения на прогресс-баре
+set "EMPTY_CHAR=-"                                                & REM Символ пустоты на прогресс-баре
 
 
 REM Расширения для категорий сортировки (проверка без учета регистра)
@@ -39,14 +41,17 @@ REM Образец для добавления:
 REM set "VAR=,.res1,.res2,.res3," 
 REM где VAR определение категории (должно совпадать со списком выше) а .res1/2/3 - расширения файлов которые в нее попадут.
 
-set "DOX=,.doc,.docx,.pdf,.txt,.xls,.xlsx,.md,"
-set "IMG=,.jpg,.jpeg,.png,.gif,.bmp,.webp,"
-set "SND=,.mp3,.wav,.flac,.ogg,.aac,.mid,"
-set "VID=,.mp4,.avi,.mkv,.mov,.wmv,"
-set "ARX=,.zip,.rar,.7z,.tar,.gz,"
-set "EXE=,.exe,.bat,.cmd,.msi,.ps1,"
-set "TOR=,.torrent,"
-set "HTM=,.html,"
+set "ARX=,.7z,.gz,.rar,.tar,.zip,"                                & REM Архивы
+set "DOX=,.txt,.rtf,.docx,.md,.doc,.xls,.xlsx,"                   & REM Документы
+set "EXE=,.cmd,.ps1,.bat,.msi,.exe,.jar,"                         & REM Исполняемые файлы
+set "FNT=,.cff,.otf,.ttf,"                                         & REM Шрифты
+set "HTM=,.mhtml,.htm,.mht,.html,"                                & REM Сохраненные веб-страницы
+set "IMG=,.png,.bmp,.jpeg,.gif,.jpg,.webp,.dds,.tga,.psd,"        & REM Изображения
+set "ISO=,.mds,.bin,.mdf,.mdx,.iso,.cue,.nrg,"                    & REM Образы дисков
+set "LIB=,.djvu,.epub,.pdf,.fb2,"                                 & REM Книги
+set "SND=,.flac,.aac,.wav,.ogg,.mp3,.mid,"                        & REM Звуки
+set "TOR=,.torrent,"                                              & REM Торрент-файлы
+set "VID=,.mkv,.wmv,.avi,.mov,.mp4,"                              & REM Видео
 
 
 REM ========================================================
@@ -81,6 +86,7 @@ if defined UNCATEGORIZED_FOLDER (
       mkdir "%ROOT_FOLDER%\%UNCATEGORIZED_FOLDER%" 2>nul
       )
 
+
 REM ========================================================
 REM СОЗДАНИЕ КАТЕГОРИЙНЫХ ПАПОК
 REM ========================================================
@@ -96,6 +102,7 @@ for %%G in (%CATEGORIES%) do (
             )
       )
 )
+
 
 REM ========================================================
 REM ОСНОВНАЯ ОБРАБОТКА ФАЙЛОВ
@@ -201,7 +208,7 @@ for %%A in (*) do (
                   echo [UNCAT] %%A moved to !dest_folder! >> "%LOG_FILE%"
             )
       )
-		
+
       REM Блок прогресс-бара: увеличение переменной на единицу, подсчет процентов, заполнения
       set /a processed+=1
       set /a percent=processed*100/total
@@ -211,7 +218,7 @@ for %%A in (*) do (
       REM Вывод символов для визуализации работы прогресс-бара
       for /l %%i in (1,1,!filled!) do set "progress=!progress!%FILL_CHAR%"
       for /l %%i in (1,1,%BAR_LENGTH%) do if %%i gtr !filled! set "progress=!progress!%EMPTY_CHAR%"
-	
+
       REM Обновление прогресс-бара по мере выполнения
       cls
       echo PROCESSING...
