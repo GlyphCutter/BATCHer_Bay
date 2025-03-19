@@ -1,4 +1,4 @@
-REM Delete Empty Directory (D.E.D.) V1.0 by GlyphCutter
+REM Sodhaka (Empty) Directory Cleaner V1.0 by GlyphCutter
 
 @ECHO off
 mode 52,36
